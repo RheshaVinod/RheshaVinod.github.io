@@ -2,14 +2,14 @@ import { useState, useEffect, useRef } from "react";
 
 const data = {
   name: "Rhesha Vinod",
-  tagline: "ML Engineer & Full-Stack Developer",
+  tagline: "CS Grad student at USC | Software Engineer | AI Researcher",
   location: "Los Angeles, CA",
   email: "rvinod@usc.edu",
   phone: "(213) 723-9993",
   linkedin: "linkedin.com/in/rheshavinod/",
   github: "github.com/RheshaVinod/",
   about:
-    "CS grad student at USC building at the intersection of AI, backend systems, and scalable infrastructure. From microservices at BT Group to explainability in medical vision-language models — I ship things that matter.",
+    "Building AI-powered systems and scalable infrastructure turning complex ideas into production-ready solutions.",
   education: [
     {
       school: "University of Southern California",
@@ -229,7 +229,7 @@ function Hero({ onViewWork }) {
           fontFamily: "'DM Mono', monospace", fontSize: "13px",
           color: "#06B6D4", letterSpacing: "3px", marginBottom: "20px",
         }}>
-          &gt; HELLO WORLD — BASED IN {data.location.toUpperCase()}
+          &gt;  BASED IN {data.location.toUpperCase()}
         </div>
 
         <h1 style={{
