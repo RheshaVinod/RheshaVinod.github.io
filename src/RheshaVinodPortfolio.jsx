@@ -64,6 +64,18 @@ const data = {
   ],
   projects: [
     {
+      title: "Distributed Key-Value Store",
+      tags: ["Distributed Systems", "Java", "Consistent Hashing", "Fault Tolerance","Replication","Threads"],
+      desc: "Built a Redis-inspired distributed key-value store from scratch in Java, implementing GET/SET/DELETE operations over TCP with concurrent client support. Designed a write-ahead log (WAL) for crash recovery and data persistence, leader-follower replication across multiple nodes, and a consistent hashing router for data sharding across servers. Benchmarked to 42,918 GET ops/sec and 6,028 SET ops/sec.",
+      link: "https://github.com/RheshaVinod/distributed-key-value-storage-system",
+    },
+    {
+      title: "Rocket Engine Anomaly Detection An End-to-End ML System",
+      tags: ["PyTorch", "CLIP", "ViT", "Explainability"],
+      desc: "Built a production-grade anomaly detection system on NASA CMAPSS jet engine telemetry data using an LSTM classifier monitoring 14 sensor channels simultaneously. Deployed as a REST API containerized with Docker, with an interactive mission control dashboard for real-time engine fault simulation.",
+      link: "https://rheshavinod.github.io/rocket-mission-control/",
+    },
+    {
       title: "Cross-Modal Attribution for Medical VLMs",
       tags: ["PyTorch", "CLIP", "ViT", "Explainability"],
       desc: "Implemented explainability methods for CLIP-based ViT models, analyzing cross-attention and multimodal embeddings on medical image–text datasets.",
@@ -97,6 +109,7 @@ const data = {
     },
   ],
   honors: [
+    "Selected Top 10 at Google X Origin Weekend Impact Hackathon (TIE Hub · USC Viterbi) for pitching an environmental solution to reduce tire wear particle pollution.",
     "Technical Excellence Award — BT Group large-scale system migration",
     "Top 3 — Bosch Innovation Challenge",
     "Prof. CNR & MRD Scholarship — 6× awardee (Top 2%, 50% tuition waiver)",
@@ -518,7 +531,7 @@ function Contact() {
       <SectionHeader number="05 /" title="CONTACT" />
       <FadeIn>
         <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(18px, 3vw, 28px)", color: "rgba(15,23,42,0.55)", fontStyle: "italic", maxWidth: "560px", lineHeight: 1.6, marginBottom: "40px" }}>
-          Open to full-time roles, research collabs, and interesting problems.
+          Open to summer internship roles, research collabs, and interesting problems.
         </p>
       </FadeIn>
       <FadeIn delay={0.1}>
