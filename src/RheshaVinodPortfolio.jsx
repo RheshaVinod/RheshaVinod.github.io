@@ -66,7 +66,7 @@ const data = {
     {
       title: "Distributed Key-Value Store",
       tags: ["Distributed Systems", "Java", "Consistent Hashing", "Fault Tolerance","Replication","Threads"],
-      desc: "Built a Redis-inspired distributed key-value store from scratch in Java, implementing GET/SET/DELETE operations over TCP with concurrent client support. Designed a write-ahead log (WAL) for crash recovery and data persistence, leader-follower replication across multiple nodes, and a consistent hashing router for data sharding across servers. Benchmarked to 42,918 GET ops/sec and 6,028 SET ops/sec.",
+      desc: "Built a Redis-inspired distributed key-value store in Java with TCP-based GET/SET/DELETE operations and concurrent client handling. Implemented write-ahead logging for persistence, leader–follower replication, and consistent hashing for sharding. Achieved ~43k GET ops/sec and ~6k SET ops/sec in benchmarks.",
       link: "https://github.com/RheshaVinod/distributed-key-value-storage-system",
     },
     {
@@ -149,13 +149,14 @@ function useInView(threshold = 0.15) {
   return [ref, inView];
 }
 
-function FadeIn({ children, delay = 0, className = "" }) {
+function FadeIn({ children, delay = 0, className = "", style = {} }) {
   const [ref, inView] = useInView();
   return (
     <div ref={ref} className={className} style={{
       opacity: inView ? 1 : 0,
       transform: inView ? "translateY(0)" : "translateY(32px)",
       transition: `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s`,
+      ...style,
     }}>
       {children}
     </div>
@@ -384,15 +385,17 @@ function Projects() {
   return (
     <section id="projects" style={sectionStyle}>
       <SectionHeader number="02 /" title="PROJECTS" />
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px", alignItems: "stretch" }}>
         {data.projects.map((p, i) => (
-          <FadeIn key={i} delay={i * 0.1}>
+          <FadeIn key={i} delay={i * 0.1} style={{ height: "100%" }}>
             <div
               onClick={() => p.link && window.open(p.link, "_blank", "noopener,noreferrer")}
               style={{
                 background: "rgba(255,255,255,0.7)", backdropFilter: "blur(12px)", border: "1px solid rgba(6,182,212,0.15)",
                 padding: "32px", position: "relative", overflow: "hidden",
                 transition: "all 0.3s ease", cursor: p.link ? "pointer" : "default",
+                height: "100%", boxSizing: "border-box",
+                display: "flex", flexDirection: "column",
               }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(6,182,212,0.4)"; e.currentTarget.style.background = "rgba(30,41,59,0.25)"; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(6,182,212,0.1)"; e.currentTarget.style.background = "rgba(255,255,255,0.7)"; }}
@@ -403,7 +406,7 @@ function Projects() {
               <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "18px", color: "#0F172A", margin: "0 0 12px", lineHeight: 1.4 }}>
                 {p.title}
               </h3>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: "rgba(15,23,42,0.5)", lineHeight: 1.7, margin: "0 0 20px" }}>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: "rgba(15,23,42,0.5)", lineHeight: 1.7, margin: "0 0 20px", flex: 1 }}>
                 {p.desc}
               </p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
