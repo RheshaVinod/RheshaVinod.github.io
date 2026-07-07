@@ -136,26 +136,37 @@ const data = {
   ],
 };
 
-// Typewriter hook
-function useTypewriter(text, speed = 60, delay = 400) {
-  const [displayed, setDisplayed] = useState("");
-  const [done, setDone] = useState(false);
-  useEffect(() => {
-    setDisplayed("");
-    setDone(false);
-    const timeout = setTimeout(() => {
-      let i = 0;
-      const interval = setInterval(() => {
-        setDisplayed(text.slice(0, i + 1));
-        i++;
-        if (i >= text.length) { clearInterval(interval); setDone(true); }
-      }, speed);
-      return () => clearInterval(interval);
-    }, delay);
-    return () => clearTimeout(timeout);
-  }, [text]);
-  return { displayed, done };
-}
+// ————— Theme —————
+const ink = "#0D0D0D";
+const paper = "#FAFAFA";
+const tile = "#FFFFFF";
+const sub = "rgba(13,13,13,0.55)";
+const hairline = "1px solid rgba(13,13,13,0.12)";
+const green = "#1FC54C";
+const accent = "#7E36F4";
+const cardShadow = "0 1px 2px rgba(13,13,13,0.05), 0 10px 30px rgba(13,13,13,0.07)";
+const cardShadowHover = "0 6px 16px rgba(13,13,13,0.12), 0 22px 48px rgba(13,13,13,0.18)";
+const chipShadow = "0 2px 6px rgba(13,13,13,0.06), 0 8px 24px rgba(13,13,13,0.08)";
+
+const displayFont = "'General Sans', 'Inter', sans-serif";
+const monoFont = "'Azeret Mono', monospace";
+const bodyFont = "'Inter', sans-serif";
+
+const mono = (size = 12, color = ink) => ({
+  fontFamily: monoFont,
+  fontSize: `${size}px`,
+  letterSpacing: "0.5px",
+  textTransform: "uppercase",
+  color,
+  lineHeight: 1.8,
+});
+
+const underlineLink = {
+  ...mono(12),
+  textDecoration: "underline",
+  textUnderlineOffset: "4px",
+  cursor: "pointer",
+};
 
 // Intersection observer hook
 function useInView(threshold = 0.15) {
@@ -174,7 +185,7 @@ function FadeIn({ children, delay = 0, className = "", style = {} }) {
   return (
     <div ref={ref} className={className} style={{
       opacity: inView ? 1 : 0,
-      transform: inView ? "translateY(0)" : "translateY(32px)",
+      transform: inView ? "translateY(0)" : "translateY(24px)",
       transition: `opacity 0.7s ease ${delay}s, transform 0.7s ease ${delay}s`,
       ...style,
     }}>
@@ -183,39 +194,39 @@ function FadeIn({ children, delay = 0, className = "", style = {} }) {
   );
 }
 
-// Floating particles for the hero background
-function Particles({ count = 22 }) {
-  const particles = useRef(
-    Array.from({ length: count }, () => ({
-      left: Math.random() * 100,
-      size: 2 + Math.random() * 4,
-      duration: 10 + Math.random() * 16,
-      delay: -Math.random() * 20,
-      opacity: 0.15 + Math.random() * 0.4,
-    }))
-  ).current;
+// Mono label with leading dot, e.g. "● EXPERIENCE:"
+function SectionLabel({ children }) {
   return (
-    <div style={{ position: "absolute", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
-      {particles.map((p, i) => (
-        <div key={i} style={{
-          position: "absolute",
-          bottom: "-10px",
-          left: `${p.left}%`,
-          width: `${p.size}px`,
-          height: `${p.size}px`,
-          borderRadius: "50%",
-          background: "#06B6D4",
-          "--p-opacity": p.opacity,
-          animation: `floatUp ${p.duration}s linear ${p.delay}s infinite`,
-        }} />
-      ))}
+    <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "40px" }}>
+      <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: accent, flexShrink: 0 }} />
+      <span style={mono(12)}>{children}</span>
     </div>
   );
 }
 
+const chipStyle = {
+  background: "rgba(255,255,255,0.8)",
+  backdropFilter: "blur(12px)",
+  WebkitBackdropFilter: "blur(12px)",
+  border: "1px solid rgba(13,13,13,0.06)",
+  boxShadow: chipShadow,
+  borderRadius: "999px",
+  padding: "12px 18px",
+  fontFamily: monoFont,
+  fontSize: "12px",
+  letterSpacing: "0.5px",
+  textTransform: "uppercase",
+  color: ink,
+  cursor: "pointer",
+  textDecoration: "none",
+  display: "inline-flex",
+  alignItems: "center",
+  gap: "8px",
+};
+
 // Nav
 function Nav({ active, sectionRefs }) {
-  const links = ["About", "Experience", "Projects", "Skills", "Publications", "Contact"];
+  const links = ["About", "Experience", "Projects", "Skills", "Publications"];
 
   const scrollTo = (label) => {
     const key = label.toLowerCase();
@@ -226,289 +237,233 @@ function Nav({ active, sectionRefs }) {
   return (
     <nav style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-      background: "rgba(241,245,249,0.85)", backdropFilter: "blur(16px)",
-      borderBottom: "1px solid rgba(30,41,59,0.1)",
-      display: "flex", justifyContent: "space-between", alignItems: "center",
-      padding: "0 40px", height: "60px",
+      display: "flex", justifyContent: "space-between", alignItems: "flex-start",
+      padding: "16px 20px", gap: "12px", pointerEvents: "none",
     }}>
-      <span
-        onClick={() => scrollTo("About")}
-        style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "22px", color: "#06B6D4", letterSpacing: "2px", cursor: "pointer" }}
-      >RV</span>
-      <div style={{ display: "flex", gap: "32px" }}>
-        {links.map(l => (
-          <button key={l}
-            onClick={() => scrollTo(l)}
-            style={{
-              background: "none", border: "none", cursor: "pointer",
-              fontFamily: "'DM Mono', monospace", fontSize: "12px",
-              color: active === l ? "#06B6D4" : "rgba(15,23,42,0.5)",
-              letterSpacing: "1.5px", textTransform: "uppercase",
-              transition: "color 0.2s", padding: 0,
-            }}
-            onMouseEnter={e => e.target.style.color = "#06B6D4"}
-            onMouseLeave={e => e.target.style.color = active === l ? "#06B6D4" : "rgba(15,23,42,0.5)"}
-          >{l}</button>
-        ))}
+      <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", pointerEvents: "auto" }}>
+        <button onClick={() => scrollTo("About")} style={{ ...chipStyle, fontWeight: 600, fontFamily: displayFont }}>
+          R_V
+        </button>
+        <div style={{ ...chipStyle, cursor: "default", gap: "16px", flexWrap: "wrap" }}>
+          {links.map(l => (
+            <button key={l}
+              onClick={() => scrollTo(l)}
+              style={{
+                background: "none", border: "none", cursor: "pointer", padding: 0,
+                fontFamily: monoFont, fontSize: "12px", letterSpacing: "0.5px",
+                textTransform: "uppercase",
+                color: active === l ? ink : "rgba(13,13,13,0.4)",
+                transition: "color 0.2s",
+              }}
+              onMouseEnter={e => e.target.style.color = ink}
+              onMouseLeave={e => e.target.style.color = active === l ? ink : "rgba(13,13,13,0.4)"}
+            >{l}</button>
+          ))}
+        </div>
       </div>
+      <a href={`mailto:${data.email}`}
+        style={{ ...chipStyle, pointerEvents: "auto", background: ink, color: paper, border: "1px solid rgba(13,13,13,0.9)", transition: "background 0.25s ease" }}
+        onMouseEnter={e => e.currentTarget.style.background = accent}
+        onMouseLeave={e => e.currentTarget.style.background = ink}
+      >
+        Contact me <span aria-hidden>→</span>
+      </a>
     </nav>
   );
 }
 
+// Giant edge-to-edge display name
+const giantNameStyle = {
+  fontFamily: displayFont,
+  fontWeight: 700,
+  textTransform: "uppercase",
+  fontSize: "min(11.5vw, 220px)",
+  lineHeight: 0.9,
+  letterSpacing: "-0.03em",
+  margin: 0,
+  color: ink,
+  whiteSpace: "nowrap",
+};
+
 // Hero
-function Hero({ onViewWork }) {
-  const { displayed } = useTypewriter(data.tagline, 55, 600);
+function Hero() {
   const [show, setShow] = useState(false);
-  const [mouse, setMouse] = useState({ x: 0.5, y: 0.5 });
-  useEffect(() => { setTimeout(() => setShow(true), 200); }, []);
+  useEffect(() => { const t = setTimeout(() => setShow(true), 150); return () => clearTimeout(t); }, []);
+
+  const reveal = (delay) => ({
+    opacity: show ? 1 : 0,
+    transform: show ? "translateY(0)" : "translateY(24px)",
+    transition: `opacity 0.8s ease ${delay}s, transform 0.8s ease ${delay}s`,
+  });
 
   return (
-    <section id="about"
-      onMouseMove={e => setMouse({ x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight })}
-      style={{
-        minHeight: "100vh", display: "flex", flexDirection: "column",
-        justifyContent: "center", padding: "0 60px", position: "relative", overflow: "hidden",
-      }}>
-      {/* Animated grid lines — drifts slightly with the cursor */}
+    <section id="about" className="hero-section" style={{ padding: "110px 20px 0" }}>
       <div style={{
-        position: "absolute", inset: "-40px", zIndex: 0,
-        backgroundImage: `
-          linear-gradient(rgba(6,182,212,0.08) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(6,182,212,0.08) 1px, transparent 1px)
-        `,
-        backgroundSize: "60px 60px",
-        animation: "gridShift 20s linear infinite",
-        transform: `translate(${(mouse.x - 0.5) * -20}px, ${(mouse.y - 0.5) * -20}px)`,
-        transition: "transform 0.4s ease-out",
-      }} />
-      <Particles />
-      {/* Glow orb — parallax wrapper so translate doesn't fight the pulse animation */}
-      <div style={{
-        position: "absolute", right: "10%", top: "20%",
-        transform: `translate(${(mouse.x - 0.5) * 50}px, ${(mouse.y - 0.5) * 50}px)`,
-        transition: "transform 0.6s ease-out",
+        minHeight: "calc(100vh - 130px)",
+        display: "flex", flexDirection: "column",
+        justifyContent: "center", alignItems: "center",
+        textAlign: "center",
       }}>
-        <div style={{
-          width: "420px", height: "420px",
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(30,41,59,0.35) 0%, transparent 70%)",
-          filter: "blur(40px)",
-          animation: "pulse 4s ease-in-out infinite",
-        }} />
-      </div>
-
-      <div style={{ position: "relative", zIndex: 1, maxWidth: "900px" }}>
-        <div style={{
-          opacity: show ? 1 : 0, transform: show ? "translateY(0)" : "translateY(-20px)",
-          transition: "all 0.6s ease 0.1s",
-          fontFamily: "'DM Mono', monospace", fontSize: "13px",
-          color: "#06B6D4", letterSpacing: "3px", marginBottom: "20px",
-        }}>
-          &gt;  BASED IN {data.location.toUpperCase()}
+        <div style={{ ...reveal(0), display: "flex", alignItems: "center", gap: "10px", marginBottom: "24px" }}>
+          <span style={{ width: "9px", height: "9px", borderRadius: "50%", background: accent, flexShrink: 0 }} />
+          <span style={{ ...mono(15, sub), letterSpacing: "1px" }}>Software Engineer · ML · Grad Student</span>
         </div>
 
-        <h1 style={{
-          opacity: show ? 1 : 0, transform: show ? "translateY(0)" : "translateY(30px)",
-          transition: "all 0.8s ease 0.3s",
-          fontFamily: "'Bebas Neue', sans-serif",
-          fontSize: "clamp(64px, 10vw, 120px)",
-          lineHeight: 0.95, margin: "0 0 12px",
-          letterSpacing: "2px",
-          background: "linear-gradient(120deg, #0F172A 40%, #06B6D4 50%, #0F172A 60%)",
-          backgroundSize: "250% 100%",
-          WebkitBackgroundClip: "text",
-          backgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          animation: "shine 7s linear infinite",
-        }}>
-          {data.name}
-        </h1>
-
-        <div style={{
-          height: "52px", display: "flex", alignItems: "center",
-          opacity: show ? 1 : 0, transition: "opacity 0.6s ease 0.6s",
-        }}>
-          <span style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: "clamp(18px, 3vw, 28px)",
-            color: "rgba(15,23,42,0.6)", fontStyle: "italic",
-          }}>
-            {displayed}<span style={{ animation: "blink 1s step-end infinite", color: "#06B6D4" }}>|</span>
-          </span>
-        </div>
-
-        <p style={{
-          opacity: show ? 1 : 0, transform: show ? "translateY(0)" : "translateY(20px)",
-          transition: "all 0.7s ease 0.9s",
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: "16px", color: "rgba(15,23,42,0.55)",
-          maxWidth: "560px", lineHeight: 1.75, marginTop: "28px",
-        }}>
-          {data.about}
-        </p>
-
-        <div style={{
-          opacity: show ? 1 : 0, transition: "opacity 0.6s ease 1.2s",
-          display: "flex", gap: "16px", marginTop: "40px", flexWrap: "wrap",
-        }}>
-          <button onClick={() => onViewWork && onViewWork()} style={{ ...btnStyle("#06B6D4", "#F1F5F9"), border: "none", cursor: "pointer" }}>View Work</button>
-          <a href={`mailto:${data.email}`} style={btnStyle("transparent", "#06B6D4", true)}>Get In Touch</a>
+        <div style={{ ...reveal(0.1), overflow: "hidden", maxWidth: "100%" }}>
+          <h1 style={giantNameStyle}>{data.name}</h1>
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div
-        onClick={() => onViewWork && onViewWork()}
-        style={{
-          position: "absolute", bottom: "32px", left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex", flexDirection: "column", alignItems: "center", gap: "10px",
-          opacity: show ? 1 : 0, transition: "opacity 1s ease 1.8s",
-          cursor: "pointer", zIndex: 1,
-        }}>
-        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "10px", color: "rgba(15,23,42,0.4)", letterSpacing: "3px" }}>SCROLL</span>
-        <div style={{
-          width: "22px", height: "36px",
-          border: "1.5px solid rgba(6,182,212,0.5)",
-          borderRadius: "12px",
-          display: "flex", justifyContent: "center",
-          paddingTop: "6px",
-        }}>
-          <div style={{
-            width: "3px", height: "8px",
-            borderRadius: "2px",
-            background: "#06B6D4",
-            animation: "scrollWheel 1.8s ease-in-out infinite",
-          }} />
+      <div className="hero-grid" style={{ ...reveal(0.35), padding: "56px 0 48px" }}>
+        <div>
+          <span style={mono(12, sub)}>Who I am:</span>
+        </div>
+        <div>
+          <p style={{ ...mono(13), margin: 0, maxWidth: "760px" }}>
+            {data.about}
+          </p>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "28px" }}>
+            <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: green, flexShrink: 0 }} />
+            <span style={mono(12)}>Available — {data.location}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="hero-grid" style={{ ...reveal(0.55), padding: "0 0 56px", borderBottom: hairline }}>
+        <div>
+          <span style={mono(12, sub)}>Socials:</span>
+        </div>
+        <div style={{ display: "flex", gap: "28px", flexWrap: "wrap" }}>
+          <a className="u-link" href={`https://${data.github}`} target="_blank" rel="noopener noreferrer" style={underlineLink}>GitHub</a>
+          <a className="u-link" href={`https://${data.linkedin}`} target="_blank" rel="noopener noreferrer" style={underlineLink}>LinkedIn</a>
+          <a className="u-link" href={`mailto:${data.email}`} style={underlineLink}>Email</a>
         </div>
       </div>
     </section>
   );
 }
 
-function btnStyle(bg, color, outline = false) {
-  return {
-    padding: "12px 28px",
-    background: bg,
-    color: color,
-    border: outline ? `1px solid #06B6D4` : "none",
-    fontFamily: "'DM Mono', monospace",
-    fontSize: "12px", letterSpacing: "2px", textTransform: "uppercase",
-    textDecoration: "none", cursor: "pointer",
-    transition: "all 0.25s ease",
-    display: "inline-block",
-  };
-}
-
-// Section Header
-function SectionHeader({ number, title }) {
+// Scrolling ticker strip between hero and experience
+function Marquee() {
+  const items = ["Backend Systems", "Agentic AI", "Distributed Systems", "Multimodal ML", "MCP & LLM Tooling", "Computer Vision", "Microservices"];
   return (
-    <FadeIn>
-      <div style={{ display: "flex", alignItems: "baseline", gap: "16px", marginBottom: "56px" }}>
-        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "12px", color: "#06B6D4", letterSpacing: "2px" }}>
-          {number}
-        </span>
-        <h2 style={{
-          fontFamily: "'Bebas Neue', sans-serif",
-          fontSize: "clamp(40px, 6vw, 72px)",
-          color: "#0F172A", margin: 0, letterSpacing: "3px",
-        }}>{title}</h2>
-        <div style={{ flex: 1, height: "1px", background: "rgba(6,182,212,0.4)", marginLeft: "8px", marginBottom: "8px" }} />
+    <div style={{ overflow: "hidden", padding: "20px 0", whiteSpace: "nowrap" }}>
+      <div style={{ display: "inline-flex", animation: "marquee 32s linear infinite" }}>
+        {[0, 1].map(k => (
+          <div key={k} aria-hidden={k === 1} style={{ display: "inline-flex" }}>
+            {items.map((t, i) => (
+              <span key={i} style={{ ...mono(13), display: "inline-flex", alignItems: "center" }}>
+                {t}
+                <span style={{ color: accent, margin: "0 28px" }}>✦</span>
+              </span>
+            ))}
+          </div>
+        ))}
       </div>
-    </FadeIn>
+    </div>
   );
 }
 
-// Experience
+// Experience — numbered rows with hairline dividers
 function Experience() {
-  const [active, setActive] = useState(0);
-  const exp = data.experience[active];
   return (
-    <section id="experience" style={sectionStyle}>
-      <SectionHeader number="01 /" title="EXPERIENCE" />
-      <div style={{ display: "flex", gap: "0", flexWrap: "wrap" }}>
-        {/* Tabs */}
-        <div style={{ display: "flex", flexDirection: "column", minWidth: "220px", borderLeft: "1px solid rgba(6,182,212,0.15)" }}>
-          {data.experience.map((e, i) => (
-            <FadeIn key={i} delay={i * 0.08}>
-              <button onClick={() => setActive(i)} style={{
-                background: "none", border: "none", cursor: "pointer",
-                textAlign: "left", padding: "16px 20px",
-                borderLeft: active === i ? "2px solid #06B6D4" : "2px solid transparent",
-                marginLeft: "-1px",
-                fontFamily: "'DM Mono', monospace", fontSize: "11px",
-                color: active === i ? "#06B6D4" : "rgba(15,23,42,0.4)",
-                letterSpacing: "1px", transition: "all 0.2s",
-                lineHeight: 1.5,
-              }}>
-                <div style={{ textTransform: "uppercase" }}>{e.company}</div>
-                <div style={{ color: "rgba(15,23,42,0.25)", fontSize: "10px", marginTop: "4px" }}>{e.period}</div>
-              </button>
-            </FadeIn>
-          ))}
-        </div>
-        {/* Content */}
-        <div style={{ flex: 1, paddingLeft: "48px", minWidth: "300px" }}>
-          <FadeIn key={active} delay={0}>
+    <section id="experience" style={{ padding: "72px 20px" }}>
+      <SectionLabel>Experience:</SectionLabel>
+      {data.experience.map((e, i) => (
+        <FadeIn key={i} delay={0.05}>
+          <div className="num-row" style={{ borderTop: hairline, padding: "36px 0" }}>
+            <span style={mono(13, accent)}>{String(i + 1).padStart(2, "0")}.</span>
             <div>
               <h3 style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: "24px", color: "#0F172A", margin: "0 0 4px",
-              }}>{exp.role} <span style={{ color: "#06B6D4" }}>@ {exp.company}</span></h3>
-              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "rgba(15,23,42,0.35)", letterSpacing: "1px", marginBottom: "28px" }}>
-                {exp.period}
-              </div>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "14px" }}>
-                {exp.bullets.map((b, i) => (
-                  <li key={i} style={{ display: "flex", gap: "14px", alignItems: "flex-start" }}>
-                    <span style={{ color: "#06B6D4", marginTop: "2px", flexShrink: 0 }}>▸</span>
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "15px", color: "rgba(15,23,42,0.65)", lineHeight: 1.7 }}>{b}</span>
+                fontFamily: displayFont, fontWeight: 600, textTransform: "uppercase",
+                fontSize: "clamp(24px, 3.4vw, 44px)", letterSpacing: "-0.02em",
+                lineHeight: 1.05, margin: "0 0 10px", color: ink,
+              }}>{e.company}</h3>
+              <div style={{ ...mono(12, sub), marginBottom: "18px" }}>{e.role}</div>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "10px", maxWidth: "820px" }}>
+                {e.bullets.map((b, j) => (
+                  <li key={j} style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
+                    <span style={{ color: sub, flexShrink: 0, lineHeight: 1.7 }}>—</span>
+                    <span style={{ fontFamily: bodyFont, fontSize: "15px", color: sub, lineHeight: 1.7 }}>{b}</span>
                   </li>
                 ))}
               </ul>
             </div>
-          </FadeIn>
+            <span className="row-period" style={mono(12, sub)}>{e.period}</span>
+          </div>
+        </FadeIn>
+      ))}
+
+      <FadeIn>
+        <div className="num-row" style={{ borderTop: hairline, padding: "36px 0" }}>
+          <span style={mono(13, accent)}>{String(data.experience.length + 1).padStart(2, "0")}.</span>
+          <div>
+            <h3 style={{
+              fontFamily: displayFont, fontWeight: 600, textTransform: "uppercase",
+              fontSize: "clamp(24px, 3.4vw, 44px)", letterSpacing: "-0.02em",
+              lineHeight: 1.05, margin: "0 0 18px", color: ink,
+            }}>Education</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+              {data.education.map((ed, j) => (
+                <div key={j} style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "baseline" }}>
+                  <span style={{ fontFamily: bodyFont, fontSize: "15px", color: ink }}>{ed.school}</span>
+                  <span style={{ fontFamily: bodyFont, fontSize: "14px", color: sub }}>{ed.degree}</span>
+                  <span style={mono(11, sub)}>{ed.period}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <span />
         </div>
-      </div>
+      </FadeIn>
     </section>
   );
 }
 
-// Projects
+// Projects — tile grid, dark invert on hover
 function Projects() {
   return (
-    <section id="projects" style={sectionStyle}>
-      <SectionHeader number="02 /" title="PROJECTS" />
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px", alignItems: "stretch" }}>
+    <section id="projects" style={{ padding: "72px 20px", borderTop: hairline }}>
+      <SectionLabel>Featured projects:</SectionLabel>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "20px", alignItems: "stretch" }}>
         {data.projects.map((p, i) => (
-          <FadeIn key={i} delay={i * 0.1} style={{ height: "100%" }}>
+          <FadeIn key={i} delay={i * 0.06} style={{ height: "100%" }}>
             <div
               onClick={() => p.link && window.open(p.link, "_blank", "noopener,noreferrer")}
               style={{
-                background: "rgba(255,255,255,0.7)", backdropFilter: "blur(12px)", border: "1px solid rgba(6,182,212,0.15)",
-                padding: "32px", position: "relative", overflow: "hidden",
-                transition: "all 0.3s ease", cursor: p.link ? "pointer" : "default",
+                background: tile, color: ink,
+                border: "1px solid rgba(13,13,13,0.06)",
+                boxShadow: cardShadow,
+                borderRadius: "16px", padding: "28px",
                 height: "100%", boxSizing: "border-box",
                 display: "flex", flexDirection: "column",
+                cursor: p.link ? "pointer" : "default",
+                transition: "background 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease",
               }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(6,182,212,0.4)"; e.currentTarget.style.background = "rgba(30,41,59,0.25)"; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(6,182,212,0.1)"; e.currentTarget.style.background = "rgba(255,255,255,0.7)"; }}
+              onMouseEnter={e => { e.currentTarget.style.background = ink; e.currentTarget.style.color = paper; e.currentTarget.style.transform = "translateY(-6px)"; e.currentTarget.style.boxShadow = cardShadowHover; }}
+              onMouseLeave={e => { e.currentTarget.style.background = tile; e.currentTarget.style.color = ink; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = cardShadow; }}
             >
-              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "32px", color: "rgba(6,182,212,0.08)", position: "absolute", top: "16px", right: "20px", fontWeight: "bold" }}>
-                {String(i + 1).padStart(2, "0")}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "36px" }}>
+                <span style={{ fontFamily: monoFont, fontSize: "12px", letterSpacing: "0.5px", color: accent }}>
+                  {String(i + 1).padStart(2, "0")}.
+                </span>
+                {p.link && <span aria-hidden style={{ fontFamily: monoFont, fontSize: "14px", color: accent }}>↗</span>}
               </div>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "18px", color: "#0F172A", margin: "0 0 12px", lineHeight: 1.4 }}>
-                {p.title}
-              </h3>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "14px", color: "rgba(15,23,42,0.5)", lineHeight: 1.7, margin: "0 0 20px", flex: 1 }}>
+              <h3 style={{
+                fontFamily: displayFont, fontWeight: 600, textTransform: "uppercase",
+                fontSize: "20px", letterSpacing: "-0.01em", lineHeight: 1.2,
+                margin: "0 0 12px", color: "inherit",
+              }}>{p.title}</h3>
+              <p style={{ fontFamily: bodyFont, fontSize: "14px", lineHeight: 1.7, margin: "0 0 24px", color: "inherit", opacity: 0.62, flex: 1 }}>
                 {p.desc}
               </p>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
                 {p.tags.map(t => (
                   <span key={t} style={{
-                    fontFamily: "'DM Mono', monospace", fontSize: "10px",
-                    color: "#06B6D4", background: "rgba(6,182,212,0.1)",
-                    padding: "4px 10px", letterSpacing: "1px",
+                    fontFamily: monoFont, fontSize: "10px", letterSpacing: "0.5px",
+                    textTransform: "uppercase", color: "inherit",
+                    border: "1px solid currentColor", opacity: 0.55,
+                    padding: "4px 10px", borderRadius: "7px",
                   }}>{t}</span>
                 ))}
               </div>
@@ -520,50 +475,38 @@ function Projects() {
   );
 }
 
-// Skills
+// Skills — numbered service-style rows
 function Skills() {
   return (
-    <section id="skills" style={sectionStyle}>
-      <SectionHeader number="03 /" title="SKILLS" />
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "32px" }}>
-        {Object.entries(data.skills).map(([cat, items], i) => (
-          <FadeIn key={cat} delay={i * 0.08}>
+    <section id="skills" style={{ padding: "72px 20px", borderTop: hairline }}>
+      <SectionLabel>Skills:</SectionLabel>
+      {Object.entries(data.skills).map(([cat, items], i) => (
+        <FadeIn key={cat} delay={0.05}>
+          <div className="num-row" style={{ borderTop: hairline, padding: "28px 0" }}>
+            <span style={mono(13, accent)}>{String(i + 1).padStart(2, "0")}.</span>
             <div>
-              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "#06B6D4", letterSpacing: "2px", textTransform: "uppercase", marginBottom: "16px" }}>
-                {cat}
-              </div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-                {items.map(s => (
-                  <span key={s} style={{
-                    fontFamily: "'DM Sans', sans-serif", fontSize: "13px",
-                    color: "rgba(15,23,42,0.7)",
-                    background: "rgba(255,255,255,0.5)",
-                    border: "1px solid rgba(30,41,59,0.12)",
-                    padding: "6px 14px",
-                    transition: "all 0.2s",
-                    cursor: "default",
-                  }}
-                    onMouseEnter={e => { e.target.style.color = "#06B6D4"; e.target.style.borderColor = "rgba(6,182,212,0.4)"; }}
-                    onMouseLeave={e => { e.target.style.color = "rgba(15,23,42,0.7)"; e.target.style.borderColor = "rgba(30,41,59,0.12)"; }}
-                  >{s}</span>
-                ))}
-              </div>
+              <h3 style={{
+                fontFamily: displayFont, fontWeight: 600, textTransform: "uppercase",
+                fontSize: "clamp(22px, 3vw, 38px)", letterSpacing: "-0.02em",
+                lineHeight: 1.05, margin: "0 0 12px", color: ink,
+              }}>{cat}</h3>
+              <p style={{ ...mono(12, sub), margin: 0, maxWidth: "820px" }}>
+                {items.join(" · ")}
+              </p>
             </div>
-          </FadeIn>
-        ))}
-      </div>
-
-      {/* Honors */}
-      <FadeIn delay={0.2}>
-        <div style={{ marginTop: "64px" }}>
-          <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "#06B6D4", letterSpacing: "3px", textTransform: "uppercase", marginBottom: "24px" }}>
-            Honors & Recognition
+            <span aria-hidden style={mono(14, accent)}>↘</span>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+        </FadeIn>
+      ))}
+
+      <FadeIn delay={0.1}>
+        <div style={{ marginTop: "72px" }}>
+          <SectionLabel>Honors & recognition:</SectionLabel>
+          <div style={{ display: "flex", flexDirection: "column" }}>
             {data.honors.map((h, i) => (
-              <div key={i} style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-                <div style={{ width: "6px", height: "6px", background: "#06B6D4", flexShrink: 0, transform: "rotate(45deg)" }} />
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "15px", color: "rgba(15,23,42,0.6)", lineHeight: 1.6 }}>{h}</span>
+              <div key={i} style={{ borderTop: hairline, padding: "18px 0", display: "flex", gap: "16px", alignItems: "baseline" }}>
+                <span style={mono(11, accent)}>{String(i + 1).padStart(2, "0")}.</span>
+                <span style={{ fontFamily: bodyFont, fontSize: "15px", color: sub, lineHeight: 1.6 }}>{h}</span>
               </div>
             ))}
           </div>
@@ -576,43 +519,22 @@ function Skills() {
 // Publications
 function Publications() {
   return (
-    <section style={sectionStyle}>
-      <SectionHeader number="04 /" title="PUBLICATIONS" />
+    <section style={{ padding: "72px 20px", borderTop: hairline }}>
+      <SectionLabel>Publications:</SectionLabel>
       {data.publications.map((p, i) => (
-        <FadeIn key={i} delay={i * 0.1}>
+        <FadeIn key={i} delay={i * 0.06}>
           <a href={p.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", display: "block" }}>
-            <div style={{
-              display: "flex", gap: "24px", alignItems: "flex-start",
-              background: "rgba(255,255,255,0.7)",
-              border: "1px solid rgba(6,182,212,0.1)",
-              padding: "28px 32px",
-              transition: "all 0.3s",
-              cursor: "pointer",
-            }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(6,182,212,0.4)"; e.currentTarget.style.background = "rgba(30,41,59,0.25)"; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(6,182,212,0.1)"; e.currentTarget.style.background = "rgba(255,255,255,0.7)"; }}
-            >
-              <div style={{ marginTop: "4px", flexShrink: 0 }}>
-                <div style={{ width: "10px", height: "10px", border: "2px solid #06B6D4", transform: "rotate(45deg)" }} />
+            <div className="num-row" style={{ borderTop: hairline, padding: "32px 0" }}>
+              <span style={mono(13, accent)}>{String(i + 1).padStart(2, "0")}.</span>
+              <div>
+                <h3 style={{
+                  fontFamily: displayFont, fontWeight: 600,
+                  fontSize: "clamp(18px, 2.4vw, 28px)", letterSpacing: "-0.01em",
+                  lineHeight: 1.3, margin: "0 0 12px", color: ink,
+                }}>{p.title}</h3>
+                <span className="u-link" style={{ ...underlineLink, color: sub }}>IEEE Xplore ↗</span>
               </div>
-              <div style={{ flex: 1 }}>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "17px", color: "#0F172A", margin: "0 0 8px", lineHeight: 1.5 }}>
-                  {p.title}
-                </h3>
-                <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
-                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "#06B6D4", letterSpacing: "1.5px" }}>
-                    {p.date}
-                  </span>
-                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "11px", color: "#06B6D4", letterSpacing: "1px", display: "flex", alignItems: "center", gap: "5px", opacity: 0.6 }}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                      <polyline points="15 3 21 3 21 9"/>
-                      <line x1="10" y1="14" x2="21" y2="3"/>
-                    </svg>
-                    IEEE Xplore ↗
-                  </span>
-                </div>
-              </div>
+              <span className="row-period" style={mono(12, sub)}>{p.date}</span>
             </div>
           </a>
         </FadeIn>
@@ -621,81 +543,98 @@ function Publications() {
   );
 }
 
-// Contact
+// Contact + footer with giant name
 function Contact() {
   return (
-    <section id="contact" style={{ ...sectionStyle, minHeight: "60vh", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-      <SectionHeader number="05 /" title="CONTACT" />
+    <section id="contact" style={{ padding: "72px 20px 24px", borderTop: hairline }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "32px", flexWrap: "wrap", paddingBottom: "40px" }}>
+        <FadeIn>
+          <p style={{ ...mono(13), margin: 0, maxWidth: "560px" }}>
+            Got an interesting problem, a role in mind, or just want to talk distributed
+            systems and ML? My inbox is always open — let's build something together.
+          </p>
+        </FadeIn>
+        <FadeIn delay={0.1}>
+          <div style={{ display: "flex", gap: "28px", flexWrap: "wrap", justifyContent: "flex-end" }}>
+            <a className="u-link" href={`https://${data.github}`} target="_blank" rel="noopener noreferrer" style={underlineLink}>GitHub</a>
+            <a className="u-link" href={`https://${data.linkedin}`} target="_blank" rel="noopener noreferrer" style={underlineLink}>LinkedIn</a>
+            <a className="u-link" href={`mailto:${data.email}`} style={underlineLink}>Email</a>
+          </div>
+        </FadeIn>
+      </div>
+
       <FadeIn>
-        <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(18px, 3vw, 28px)", color: "rgba(15,23,42,0.55)", fontStyle: "italic", maxWidth: "560px", lineHeight: 1.6, marginBottom: "40px" }}>
-          Open to summer internship roles, research collabs, and interesting problems.
-        </p>
-      </FadeIn>
-      <FadeIn delay={0.1}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "24px" }}>
-          {[
-            { label: "Email", value: data.email, href: `mailto:${data.email}` },
-            { label: "LinkedIn", value: data.linkedin, href: `https://${data.linkedin}` },
-            { label: "GitHub", value: data.github, href: `https://${data.github}` },
-          ].map(c => (
-            <a key={c.label} href={c.href} target="_blank" rel="noopener noreferrer" style={{
-              textDecoration: "none",
-              background: "rgba(255,255,255,0.7)",
-              border: "1px solid rgba(6,182,212,0.15)",
-              padding: "20px 28px",
-              minWidth: "200px",
-              transition: "all 0.25s",
-            }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = "#06B6D4"; e.currentTarget.style.background = "rgba(30,41,59,0.25)"; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(6,182,212,0.15)"; e.currentTarget.style.background = "rgba(255,255,255,0.7)"; }}
-            >
-              <div style={{ fontFamily: "'DM Mono', monospace", fontSize: "10px", color: "#06B6D4", letterSpacing: "2px", marginBottom: "6px" }}>{c.label}</div>
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "13px", color: "rgba(15,23,42,0.6)" }}>{c.value}</div>
-            </a>
-          ))}
+        <div style={{ overflow: "hidden", paddingTop: "40px" }}>
+          <h2 style={giantNameStyle}>{data.name}</h2>
         </div>
       </FadeIn>
+
+      <div style={{
+        display: "flex", justifyContent: "space-between", alignItems: "center",
+        flexWrap: "wrap", gap: "16px", paddingTop: "32px",
+      }}>
+        <span style={mono(11, sub)}>© 2026 Rhesha Vinod</span>
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          style={{ ...mono(11), background: "none", border: "none", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: "8px" }}
+        >
+          <span aria-hidden>↑</span> Back to top
+        </button>
+        <a className="u-link" href={`mailto:${data.email}`} style={{ ...underlineLink, fontSize: "11px", color: sub }}>{data.email}</a>
+      </div>
     </section>
   );
 }
 
-const sectionStyle = {
-  padding: "100px 60px",
-  maxWidth: "1100px",
-  margin: "0 auto",
-};
-
 // CSS injected globally
 const globalStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
+  @import url('https://api.fontshare.com/v2/css?f[]=general-sans@500,600,700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500&family=Inter:wght@400;500&display=swap');
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   html { scroll-behavior: smooth; }
 
   body {
-    background: #F1F5F9;
-    color: #0F172A;
+    background: ${paper};
+    color: ${ink};
     overflow-x: hidden;
+    font-family: 'Inter', sans-serif;
   }
+
+  ::selection { background: ${ink}; color: ${paper}; }
 
   ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: #F1F5F9; }
-  ::-webkit-scrollbar-thumb { background: rgba(30,41,59,0.6); border-radius: 3px; }
+  ::-webkit-scrollbar-track { background: ${paper}; }
+  ::-webkit-scrollbar-thumb { background: rgba(13,13,13,0.35); border-radius: 3px; }
 
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 32px;
+    align-items: start;
   }
 
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 0.8; }
-    50% { transform: scale(1.08); opacity: 1; }
+  .num-row {
+    display: grid;
+    grid-template-columns: 72px 1fr auto;
+    gap: 24px;
+    align-items: start;
   }
 
-  @keyframes gridShift {
-    0% { background-position: 0 0; }
-    100% { background-position: 60px 60px; }
+  .u-link { transition: color 0.2s ease; }
+  .u-link:hover { color: ${accent} !important; }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @media (max-width: 720px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 16px; }
+    .num-row { grid-template-columns: 40px 1fr; }
+    .row-period { grid-column: 2; }
+    .hero-section { padding-top: 180px !important; }
   }
 `;
 
@@ -734,30 +673,17 @@ export default function Portfolio() {
   const setRef = (key) => (el) => { sectionRefs.current[key] = el; };
 
   return (
-    <div style={{ background: "#F1F5F9", minHeight: "100vh" }}>
+    <div style={{ background: paper, minHeight: "100vh" }}>
       <Nav active={activeSection} sectionRefs={sectionRefs} />
-      <div ref={setRef("about")} data-section="about" style={{ paddingTop: "60px" }}>
-        <Hero onViewWork={() => sectionRefs.current["experience"]?.scrollIntoView({ behavior: "smooth" })} />
+      <div ref={setRef("about")} data-section="about">
+        <Hero />
       </div>
-      <div style={{ borderTop: "1px solid rgba(6,182,212,0.06)" }}>
-        <div ref={setRef("experience")} data-section="experience"><Experience /></div>
-        <div ref={setRef("projects")} data-section="projects"><Projects /></div>
-        <div ref={setRef("skills")} data-section="skills"><Skills /></div>
-        <div ref={setRef("publications")} data-section="publications"><Publications /></div>
-        <div ref={setRef("contact")} data-section="contact"><Contact /></div>
-      </div>
-      <footer style={{
-        borderTop: "1px solid rgba(6,182,212,0.1)",
-        padding: "24px 60px",
-        fontFamily: "'DM Mono', monospace",
-        fontSize: "11px",
-        color: "rgba(15,23,42,0.35)",
-        letterSpacing: "1.5px",
-        display: "flex", justifyContent: "space-between",
-      }}>
-        <span>© 2026 RHESHA VINOD</span>
-        <span>BUILT WITH REACT</span>
-      </footer>
+      <Marquee />
+      <div ref={setRef("experience")} data-section="experience" style={{ borderTop: hairline }}><Experience /></div>
+      <div ref={setRef("projects")} data-section="projects"><Projects /></div>
+      <div ref={setRef("skills")} data-section="skills"><Skills /></div>
+      <div ref={setRef("publications")} data-section="publications"><Publications /></div>
+      <div ref={setRef("contact")} data-section="contact"><Contact /></div>
     </div>
   );
 }
