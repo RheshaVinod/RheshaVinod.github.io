@@ -2,14 +2,14 @@ import { useState, useEffect, useRef } from "react";
 
 const data = {
   name: "Rhesha Vinod",
-  tagline: "CS Grad student at USC | Software Engineer | AI Researcher",
+  tagline: "SDE Intern @ SprintRay | MSCS @ USC | Backend Systems · Agentic AI · Multimodal",
   location: "Los Angeles, CA",
   email: "rvinod@usc.edu",
   phone: "(213) 723-9993",
   linkedin: "linkedin.com/in/rheshavinod/",
   github: "github.com/RheshaVinod/",
   about:
-    "Building AI-powered systems and scalable infrastructure turning complex ideas into production-ready solutions.",
+    "MSCS student at USC (class of 2027) focused on ML systems and distributed backend engineering. Currently building an MCP server at SprintRay that lets LLM-based agents interact with the platform. Previously led a monolith-to-microservices migration across 10+ services at BT Group and built a patent-pending GenAI mobile app at Bosch. Open to SWE, ML Engineering, and Applied AI roles (full-time 2027).",
   education: [
     {
       school: "University of Southern California",
@@ -24,12 +24,30 @@ const data = {
   ],
   experience: [
     {
+      role: "Software Engineer Intern",
+      company: "SprintRay Inc.",
+      period: "Jun 2026 – Present",
+      bullets: [
+        "Designing and building a Model Context Protocol (MCP) server in TypeScript that exposes SprintRay's platform capabilities as standardized tools, enabling any LLM-based agent to interact with the product.",
+        "Deployed on AWS with a focus on scalability, reliability, and secure tool access.",
+      ],
+    },
+    {
+      role: "Software Engineer (Part-time)",
+      company: "USC Information Technology Services",
+      period: "Apr 2026 – Jun 2026",
+      bullets: [
+        "Designed and built a real-time computer vision service (YOLOv8, OpenCV, Python) with a REST inference API to detect and verify classroom equipment across campus infrastructure, deployed for automated monitoring at scale.",
+        "Improved site performance and reliability through frontend/backend fixes and performance optimization.",
+      ],
+    },
+    {
       role: "Developer",
       company: "USC Annenberg Media",
       period: "Feb 2026 – Apr 2026",
       bullets: [
-        "Contributed to ML backend team, resolving bugs and JIRA tickets for the Annenberg News website using React and ArcXP.",
-        "Leveraged Google Analytics and ML tools to support data-driven improvements in a Scrum-based Agile environment.",
+        "Delivered features and resolved bugs and JIRA tickets for the Annenberg News platform using React and ArcXP within a Scrum-based Agile team.",
+        "Leveraged Google Analytics and ML tools to support data-driven improvements.",
       ],
     },
     {
@@ -37,10 +55,10 @@ const data = {
       company: "BT Group (Openreach)",
       period: "Jul 2024 – Jul 2025",
       bullets: [
-        "Drove migration of monolithic orchestration tool 'SOGEA' to microservices architecture using Java Spring Boot, improving scalability across 10+ services.",
-        "Optimized cross-service communication via IBM MQ and RabbitMQ for improved deployment performance and message throughput.",
-        "Leveraged OpenRewrite to automate 60%+ of complex code transformations, minimizing manual refactoring.",
-        "Led team in AWS Q-developer hackathon; enhanced process efficiency by 25% through workflow optimization.",
+        "Led the migration of a monolithic orchestration system (SOGEA) to a microservices architecture in Java and Spring Boot, delivering 10+ independently deployable services and improving scalability and deployment reliability.",
+        "Owned a production microservice end-to-end and contributed to 10+ others; optimized inter-service messaging with IBM MQ and RabbitMQ to reduce message latency and increase system throughput.",
+        "Drove a company-wide Java 11 upgrade, using OpenRewrite to automate 60%+ of complex code transformations across the codebase.",
+        "Led a team at the AWS Q Developer hackathon, building workflow automations that improved process efficiency by 25%.",
       ],
     },
     {
@@ -53,12 +71,12 @@ const data = {
       ],
     },
     {
-      role: "Summer Intern",
+      role: "Software Engineering Intern",
       company: "Bosch Global Software Technologies",
       period: "Jun 2023 – Jul 2023",
       bullets: [
-        "Built AI/ML mobile solution 'GPT Manual' using Generative AI and React Native, achieving 90% model accuracy.",
-        "Currently progressing through formal patent review for the developed AI-driven solution.",
+        "Co-developed a cross-platform mobile application ('GPT Manual') in React Native integrating a Generative AI backend, achieving 90% prediction accuracy in real time.",
+        "Solution currently under Bosch's formal patent review process.",
       ],
     },
   ],
@@ -70,9 +88,9 @@ const data = {
       link: "https://github.com/RheshaVinod/distributed-key-value-storage-system",
     },
     {
-      title: "Rocket Engine Anomaly Detection An End-to-End ML System",
-      tags: ["PyTorch", "CLIP", "ViT", "Explainability"],
-      desc: "Built a production-grade anomaly detection system on NASA CMAPSS jet engine telemetry data using an LSTM classifier monitoring 14 sensor channels simultaneously. Deployed as a REST API containerized with Docker, with an interactive mission control dashboard for real-time engine fault simulation.",
+      title: "Rocket Engine Anomaly Detection: An End-to-End ML System",
+      tags: ["LSTM", "FastAPI", "Docker"],
+      desc: "Built a production-grade anomaly detection system on NASA CMAPSS jet engine telemetry using an LSTM model. Achieved F1-score 0.93, improving performance by 87% over classical baselines. Deployed as a FastAPI REST service with Docker containerization and a real-time mission control dashboard for predictive maintenance monitoring.",
       link: "https://rheshavinod.github.io/rocket-mission-control/",
     },
     {
@@ -95,11 +113,12 @@ const data = {
     },
   ],
   skills: {
-    Languages: ["Python", "Java", "C++"],
-    "AI & ML": ["LLMs", "Deep Learning", "NLP", "PyTorch", "Scikit-learn"],
-    Cloud: ["AWS", "Docker", "Kubernetes"],
-    Web: ["React.js", "Node.js", "FastAPI", "Spring Boot", "TypeScript"],
-    Databases: ["MongoDB", "MySQL"],
+    Languages: ["Python", "Java", "C++", "TypeScript", "JavaScript", "SQL"],
+    "AI & ML": ["LLMs", "PyTorch", "HuggingFace", "Transformers", "OpenCV", "YOLOv8", "Deep Learning", "NLP", "Scikit-learn"],
+    "Backend & Systems": ["Spring Boot", "Node.js", "FastAPI", "REST APIs", "Microservices", "IBM MQ", "RabbitMQ", "Camunda", "Distributed Systems"],
+    "Cloud & DevOps": ["AWS (Lambda, EC2, S3)", "Docker", "Kubernetes", "CI/CD", "Git"],
+    Frontend: ["React.js", "React Native"],
+    Databases: ["MySQL", "MongoDB", "ChromaDB"],
   },
   publications: [
     {
@@ -112,6 +131,7 @@ const data = {
     "Selected Top 10 at Google X Origin Weekend Impact Hackathon (TIE Hub · USC Viterbi) for pitching an environmental solution to reduce tire wear particle pollution.",
     "Technical Excellence Award — BT Group large-scale system migration",
     "Top 3 — Bosch Innovation Challenge",
+    "Shortlisted — BugsandBytes Hackathon 2022",
     "Prof. CNR & MRD Scholarship — 6× awardee (Top 2%, 50% tuition waiver)",
   ],
 };
@@ -163,6 +183,36 @@ function FadeIn({ children, delay = 0, className = "", style = {} }) {
   );
 }
 
+// Floating particles for the hero background
+function Particles({ count = 22 }) {
+  const particles = useRef(
+    Array.from({ length: count }, () => ({
+      left: Math.random() * 100,
+      size: 2 + Math.random() * 4,
+      duration: 10 + Math.random() * 16,
+      delay: -Math.random() * 20,
+      opacity: 0.15 + Math.random() * 0.4,
+    }))
+  ).current;
+  return (
+    <div style={{ position: "absolute", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
+      {particles.map((p, i) => (
+        <div key={i} style={{
+          position: "absolute",
+          bottom: "-10px",
+          left: `${p.left}%`,
+          width: `${p.size}px`,
+          height: `${p.size}px`,
+          borderRadius: "50%",
+          background: "#06B6D4",
+          "--p-opacity": p.opacity,
+          animation: `floatUp ${p.duration}s linear ${p.delay}s infinite`,
+        }} />
+      ))}
+    </div>
+  );
+}
+
 // Nav
 function Nav({ active, sectionRefs }) {
   const links = ["About", "Experience", "Projects", "Skills", "Publications", "Contact"];
@@ -209,32 +259,43 @@ function Nav({ active, sectionRefs }) {
 function Hero({ onViewWork }) {
   const { displayed } = useTypewriter(data.tagline, 55, 600);
   const [show, setShow] = useState(false);
+  const [mouse, setMouse] = useState({ x: 0.5, y: 0.5 });
   useEffect(() => { setTimeout(() => setShow(true), 200); }, []);
 
   return (
-    <section id="about" style={{
-      minHeight: "100vh", display: "flex", flexDirection: "column",
-      justifyContent: "center", padding: "0 60px", position: "relative", overflow: "hidden",
-    }}>
-      {/* Animated grid lines */}
+    <section id="about"
+      onMouseMove={e => setMouse({ x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight })}
+      style={{
+        minHeight: "100vh", display: "flex", flexDirection: "column",
+        justifyContent: "center", padding: "0 60px", position: "relative", overflow: "hidden",
+      }}>
+      {/* Animated grid lines — drifts slightly with the cursor */}
       <div style={{
-        position: "absolute", inset: 0, zIndex: 0,
+        position: "absolute", inset: "-40px", zIndex: 0,
         backgroundImage: `
           linear-gradient(rgba(6,182,212,0.08) 1px, transparent 1px),
           linear-gradient(90deg, rgba(6,182,212,0.08) 1px, transparent 1px)
         `,
         backgroundSize: "60px 60px",
         animation: "gridShift 20s linear infinite",
+        transform: `translate(${(mouse.x - 0.5) * -20}px, ${(mouse.y - 0.5) * -20}px)`,
+        transition: "transform 0.4s ease-out",
       }} />
-      {/* Glow orb */}
+      <Particles />
+      {/* Glow orb — parallax wrapper so translate doesn't fight the pulse animation */}
       <div style={{
         position: "absolute", right: "10%", top: "20%",
-        width: "420px", height: "420px",
-        borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(30,41,59,0.35) 0%, transparent 70%)",
-        filter: "blur(40px)",
-        animation: "pulse 4s ease-in-out infinite",
-      }} />
+        transform: `translate(${(mouse.x - 0.5) * 50}px, ${(mouse.y - 0.5) * 50}px)`,
+        transition: "transform 0.6s ease-out",
+      }}>
+        <div style={{
+          width: "420px", height: "420px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(30,41,59,0.35) 0%, transparent 70%)",
+          filter: "blur(40px)",
+          animation: "pulse 4s ease-in-out infinite",
+        }} />
+      </div>
 
       <div style={{ position: "relative", zIndex: 1, maxWidth: "900px" }}>
         <div style={{
@@ -251,8 +312,14 @@ function Hero({ onViewWork }) {
           transition: "all 0.8s ease 0.3s",
           fontFamily: "'Bebas Neue', sans-serif",
           fontSize: "clamp(64px, 10vw, 120px)",
-          lineHeight: 0.95, color: "#0F172A", margin: "0 0 12px",
+          lineHeight: 0.95, margin: "0 0 12px",
           letterSpacing: "2px",
+          background: "linear-gradient(120deg, #0F172A 40%, #06B6D4 50%, #0F172A 60%)",
+          backgroundSize: "250% 100%",
+          WebkitBackgroundClip: "text",
+          backgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          animation: "shine 7s linear infinite",
         }}>
           {data.name}
         </h1>
@@ -286,6 +353,33 @@ function Hero({ onViewWork }) {
         }}>
           <button onClick={() => onViewWork && onViewWork()} style={{ ...btnStyle("#06B6D4", "#F1F5F9"), border: "none", cursor: "pointer" }}>View Work</button>
           <a href={`mailto:${data.email}`} style={btnStyle("transparent", "#06B6D4", true)}>Get In Touch</a>
+        </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div
+        onClick={() => onViewWork && onViewWork()}
+        style={{
+          position: "absolute", bottom: "32px", left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex", flexDirection: "column", alignItems: "center", gap: "10px",
+          opacity: show ? 1 : 0, transition: "opacity 1s ease 1.8s",
+          cursor: "pointer", zIndex: 1,
+        }}>
+        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "10px", color: "rgba(15,23,42,0.4)", letterSpacing: "3px" }}>SCROLL</span>
+        <div style={{
+          width: "22px", height: "36px",
+          border: "1.5px solid rgba(6,182,212,0.5)",
+          borderRadius: "12px",
+          display: "flex", justifyContent: "center",
+          paddingTop: "6px",
+        }}>
+          <div style={{
+            width: "3px", height: "8px",
+            borderRadius: "2px",
+            background: "#06B6D4",
+            animation: "scrollWheel 1.8s ease-in-out infinite",
+          }} />
         </div>
       </div>
     </section>
